@@ -1,0 +1,180 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "title": "EasySave — Core Production & Media Analytics",
+  "tags": ["easysave", "yt-dlp", "node", "downloader"],
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "panels": [
+    {
+      "title": "Active Jobs & Queue Depth",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 0 },
+      "id": 1,
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "easysave_active_jobs",
+          "legendFormat": "Active Jobs"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "easysave_queue_depth",
+          "legendFormat": "Queued Jobs"
+        }
+      ],
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal"
+      }
+    },
+    {
+      "title": "Temp Storage Utilization (GB)",
+      "type": "gauge",
+      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 0 },
+      "id": 2,
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "easysave_temp_dir_bytes / 1073741824",
+          "legendFormat": "Used Temp GB"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 10,
+          "unit": "decbytes",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 6 },
+              { "color": "red", "value": 8 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Extraction Cache Hit Ratio",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 0 },
+      "id": 3,
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "sum(rate(easysave_cache_hits_total[5m])) / (sum(rate(easysave_cache_hits_total[5m])) + sum(rate(easysave_cache_misses_total[5m]))) * 100",
+          "legendFormat": "Hit Ratio %"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 50 },
+              { "color": "green", "value": 75 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Extraction Requests / sec by Platform",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 },
+      "id": 4,
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "sum by (platform) (rate(easysave_extract_total[2m]))",
+          "legendFormat": "{{platform}}"
+        }
+      ]
+    },
+    {
+      "title": "Extraction Latency Percentiles (Seconds)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 6 },
+      "id": 5,
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "histogram_quantile(0.50, sum(rate(easysave_extract_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p50 Latency"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "histogram_quantile(0.95, sum(rate(easysave_extract_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p95 Latency"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "histogram_quantile(0.99, sum(rate(easysave_extract_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p99 Latency"
+        }
+      ]
+    },
+    {
+      "title": "Download Job Completion Rate vs Failures",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
+      "id": 6,
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "sum(rate(easysave_download_completed_total[2m]))",
+          "legendFormat": "Completed Jobs/sec"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "sum(rate(easysave_download_failed_total[2m]))",
+          "legendFormat": "Failed Jobs/sec"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "sum(rate(easysave_download_retry_total[2m]))",
+          "legendFormat": "Retry Attempts/sec"
+        }
+      ]
+    },
+    {
+      "title": "Node.js Process Memory & CPU Utilization",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
+      "id": 7,
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "easysave_node_nodejs_heap_size_used_bytes / 1048576",
+          "legendFormat": "Heap Used (MB)"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "rate(easysave_node_process_cpu_seconds_total[1m]) * 100",
+          "legendFormat": "CPU Usage %"
+        }
+      ]
+    }
+  ]
+}
