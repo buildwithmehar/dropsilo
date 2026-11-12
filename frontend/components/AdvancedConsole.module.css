@@ -1,0 +1,20 @@
+/* Hallmark · scope: app · existing EasySave tokens */
+/* Review: one primary action per state; native controls for keyboard access. */
+.console :is(a, button, input, select):focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 3px;
+}
+
+.field {
+  background-color: var(--color-card-2);
+  border: 1px solid color-mix(in srgb, var(--text-muted) 68%, var(--color-card-2));
+}
+
+.console button:active:not(:disabled) {
+  filter: brightness(0.92);
+}
+
+.console :is(button, input, select):disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
