@@ -1,0 +1,8 @@
+.local/
+bin/advanced/
+bin/advanced-python/
+bin/streamrip-python/
+temp/
+dist/
+node_modules/
+.env

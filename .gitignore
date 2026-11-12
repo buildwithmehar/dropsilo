@@ -1,0 +1,26 @@
+node_modules/
+.next/
+dist/
+out/
+*.tsbuildinfo
+/frontend/next-env.d.ts
+*.log
+logs/
+temp/
+.local/
+.env
+.env.*
+!.env.example
+*cookies*.txt
+*.key
+*.pem
+
+# Download engines are installed locally. Track the setup guide.
+/backend/bin/*
+!/backend/bin/README.md
+
+# Local research and review output.
+/.hallmark/
+/graphify-out/
+/research/
+/ANTIGRAVITY.md
